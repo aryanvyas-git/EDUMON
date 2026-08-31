@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Chat — {{ room.name }}{% endblock %}
+{% block content %}
+<h1>Chat — {{ room.name }}</h1>
+<div id="chat-log" class="border rounded p-3 mb-3" style="height: 320px; overflow-y: auto;">
+    {% for message in chat_messages %}
+        <div><strong>{{ message.sender.username }}:</strong> {{ message.body }}</div>
+    {% endfor %}
+</div>
+<div class="input-group">
+    <input id="chat-input" type="text" class="form-control" placeholder="Type a message and press Enter">
+    <button id="chat-send" class="btn btn-primary">Send</button>
+</div>
+
+{{ room.name|json_script:"room-name" }}
+<script>
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+    const wsScheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const chatSocket = new WebSocket(`${wsScheme}://${window.location.host}/ws/chat/${roomName}/`);
+    const log = document.getElementById('chat-log');
+    const input = document.getElementById('chat-input');
+
+    chatSocket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        const line = document.createElement('div');
+        line.innerHTML = `<strong>${data.username}:</strong> ${data.message}`;
+        log.appendChild(line);
+        log.scrollTop = log.scrollHeight;
+    };
+
+    chatSocket.onclose = () => {
+        const line = document.createElement('div');
+        line.className = 'text-danger';
+        line.textContent = 'Connection closed.';
+        log.appendChild(line);
+    };
+
+    function sendMessage() {
+        const message = input.value.trim();
+        if (!message) return;
+        chatSocket.send(JSON.stringify({ message }));
+        input.value = '';
+    }
+
+    document.getElementById('chat-send').addEventListener('click', sendMessage);
+    input.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+</script>
+{% endblock %}

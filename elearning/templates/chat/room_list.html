@@ -1,6 +1,32 @@
 {% extends 'base.html' %}
 {% block title %}Chat{% endblock %}
 {% block content %}
-<h1>Chat Rooms</h1>
-<p class="text-muted">Coming in Phase 5.</p>
+<h1>Chat</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <h5>Your rooms</h5>
+        <ul class="list-group mb-3">
+            {% for room in rooms %}
+                <li class="list-group-item">
+                    <a href="{% url 'chat:room_detail' room.name %}">{{ room.name }}</a>
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted">No chats yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h5>Start a new chat</h5>
+        <form method="post" action="{% url 'chat:start_chat' %}" class="d-flex gap-2">
+            {% csrf_token %}
+            <select name="user_id" class="form-select">
+                {% for other in other_users %}
+                    <option value="{{ other.pk }}">{{ other.real_name|default:other.username }} ({{ other.role }})</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary">Chat</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

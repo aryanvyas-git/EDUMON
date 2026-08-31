@@ -22,7 +22,7 @@
                         {% endif %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'chat:room_list' %}">Chat</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'notifications:list' %}">Notifications
-                            {% if unread_notification_count %}<span class="badge bg-danger">{{ unread_notification_count }}</span>{% endif %}
+                            <span id="notification-badge" class="badge bg-danger" {% if not unread_notification_count %}style="display:none"{% endif %}>{{ unread_notification_count }}</span>
                         </a></li>
                     {% endif %}
                 </ul>
@@ -51,5 +51,20 @@
         {% endif %}
         {% block content %}{% endblock %}
     </div>
+    {% if user.is_authenticated %}
+    <script>
+        (function () {
+            const wsScheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+            const socket = new WebSocket(`${wsScheme}://${window.location.host}/ws/notifications/`);
+            socket.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                const badge = document.getElementById('notification-badge');
+                badge.style.display = 'inline-block';
+                badge.textContent = (parseInt(badge.textContent, 10) || 0) + 1;
+                console.log('New notification:', data.verb);
+            };
+        })();
+    </script>
+    {% endif %}
 </body>
 </html>
