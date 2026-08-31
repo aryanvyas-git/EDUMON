@@ -1,6 +1,8 @@
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
+from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from courses.models import Course, Enrolment
@@ -67,8 +69,19 @@ def user_detail(request, username):
 
 @login_required
 def search(request):
-    """Placeholder — replaced with full student/teacher search in Phase 3 (R1c)."""
-    return render(request, 'accounts/search.html', {'results': []})
+    """Teachers search students and teachers by name/username (R1c)."""
+    if not request.user.is_teacher():
+        raise PermissionDenied('Only teachers can search users.')
+
+    query = request.GET.get('q', '').strip()
+    results = CustomUser.objects.none()
+    if query:
+        results = CustomUser.objects.filter(
+            Q(username__icontains=query)
+            | Q(real_name__icontains=query)
+            | Q(email__icontains=query)
+        ).order_by('username')
+    return render(request, 'accounts/search.html', {'results': results, 'query': query})
 
 
 def _build_profile_context(profile_user, form):
