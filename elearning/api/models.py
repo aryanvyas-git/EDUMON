@@ -1,3 +1,1 @@
-from django.db import models
-
-# Create your models here.
+# This app only wires DRF routers together in urls.py; no models of its own.

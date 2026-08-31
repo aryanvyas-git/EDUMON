@@ -58,7 +58,8 @@ def course_detail(request, pk):
     feedback_list = course.feedback.select_related('student').all()
 
     feedback_form = None
-    if enrolment and not enrolment.is_blocked and not Feedback.objects.filter(course=course, student=request.user).exists():
+    already_left_feedback = Feedback.objects.filter(course=course, student=request.user).exists()
+    if enrolment and not enrolment.is_blocked and not already_left_feedback:
         feedback_form = FeedbackForm()
 
     material_form = CourseMaterialForm() if is_teacher_of_course else None

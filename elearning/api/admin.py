@@ -1,3 +1,1 @@
-from django.contrib import admin
-
-# Register your models here.
+# This app only wires DRF routers together in urls.py; no models of its own.

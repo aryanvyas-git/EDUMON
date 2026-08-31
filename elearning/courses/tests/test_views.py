@@ -84,7 +84,7 @@ class FeedbackViewTests(TestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_non_enrolled_student_cannot_leave_feedback(self):
-        other = make_student('student2')
+        make_student('student2')
         self.client.login(username='student2', password='pass12345')
         response = self.client.post(reverse('courses:add_feedback', args=[self.course.pk]), {
             'rating': 4, 'comment': 'Good course',
