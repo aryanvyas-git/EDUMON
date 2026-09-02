@@ -1,0 +1,68 @@
+{% load static design %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EDUMON{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Caveat:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="app-shell" id="app-shell">
+        {% include 'partials/_sidebar.html' %}
+        <div class="app-main">
+            <header class="app-header">
+                <div class="row-flex gap-3">
+                    <button type="button" class="app-header__menu-toggle" id="nav-toggle" aria-label="Toggle navigation">{% icon 'menu' %}</button>
+                    <h1 class="text-h3" style="font-size:17px;">{% block page_title %}{% endblock %}</h1>
+                </div>
+                <div class="app-header__user">
+                    <span class="status-pill status-pill--primary text-capitalize">{{ user.role }}</span>
+                    <div class="avatar avatar--sm">
+                        {% if user.photo %}<img src="{{ user.photo.url }}" alt="">{% else %}{{ user.real_name|default:user.username|initials }}{% endif %}
+                    </div>
+                </div>
+            </header>
+            <main class="app-content">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const toggle = document.getElementById('nav-toggle');
+            const shell = document.getElementById('app-shell');
+            if (toggle) {
+                toggle.addEventListener('click', () => shell.classList.toggle('is-nav-open'));
+            }
+        })();
+    </script>
+    {% if user.is_authenticated %}
+    <script>
+        (function () {
+            const wsScheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+            const socket = new WebSocket(`${wsScheme}://${window.location.host}/ws/notifications/`);
+            socket.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                const badge = document.getElementById('notification-badge');
+                badge.hidden = false;
+                badge.textContent = (parseInt(badge.textContent, 10) || 0) + 1;
+                console.log('New notification:', data.verb);
+            };
+        })();
+    </script>
+    {% endif %}
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

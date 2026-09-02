@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load design %}
+{% block title %}{{ profile_user.real_name|default:profile_user.username }}{% endblock %}
+{% block page_title %}{% if is_own_profile %}Home{% else %}{{ profile_user.real_name|default:profile_user.username }}{% endif %}{% endblock %}
+{% block content %}
+
+{% if is_own_profile %}
+<div class="grid grid-3 mb-6">
+    {% include 'partials/_kpi_card.html' with value=courses.count label=course_stat_label icon_name='book-open' variant='primary' %}
+    {% include 'partials/_kpi_card.html' with value=statuses.count label='Status updates posted' icon_name='send' variant='purple' %}
+    {% include 'partials/_kpi_card.html' with value=unread_notification_count|default:0 label='Unread notifications' icon_name='bell' variant='pink' %}
+</div>
+{% endif %}
+
+<div class="grid grid-profile">
+    <div class="stack gap-6">
+        <div class="card" style="text-align:center;">
+            {% if profile_user.photo %}
+                <div class="avatar avatar--lg" style="margin:0 auto var(--space-3);"><img src="{{ profile_user.photo.url }}" alt=""></div>
+            {% else %}
+                <div class="avatar avatar--lg" style="margin:0 auto var(--space-3);">{{ profile_user.real_name|default:profile_user.username|initials }}</div>
+            {% endif %}
+            <h3>{{ profile_user.real_name|default:profile_user.username }}</h3>
+            <div class="mt-2">{% status_pill 'primary' profile_user.get_role_display %}</div>
+            {% if profile_user.bio %}<p class="text-body-sm text-secondary mt-3">{{ profile_user.bio }}</p>{% endif %}
+        </div>
+
+        <div class="card">
+            <h3 class="mb-3">{% if profile_user.is_teacher %}Courses taught{% else %}Enrolled courses{% endif %}</h3>
+            <ul class="stack gap-2">
+                {% for course in courses %}
+                    <li><a href="{% url 'courses:course_detail' course.pk %}" class="row-flex between" style="color:var(--color-text);">
+                        <span class="text-body-sm">{{ course.title }}</span>{% icon 'chevron-right' size=14 %}
+                    </a></li>
+                {% empty %}
+                    <li class="text-muted text-body-sm">None yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="stack gap-4">
+        {% if is_own_profile %}
+            <div class="card">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.content }}
+                    {% for error in form.content.errors %}<div class="field__error">{{ error }}</div>{% endfor %}
+                    <div class="row-flex" style="justify-content:flex-end;"><button type="submit" class="btn btn-primary btn-sm mt-3">Post</button></div>
+                </form>
+            </div>
+        {% endif %}
+
+        <h2>Status updates</h2>
+        {% for status in statuses %}
+            <div class="card card-flat">
+                <div>{{ status.content }}</div>
+                <span class="text-caption">{{ status.created_at }}</span>
+            </div>
+        {% empty %}
+            <p class="text-muted text-body-sm">No status updates yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

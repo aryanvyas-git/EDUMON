@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load design %}
+{% block title %}Notifications{% endblock %}
+{% block page_title %}Notifications{% endblock %}
+{% block content %}
+<div class="table-wrap">
+    <ul>
+        {% for notification in notifications %}
+            <li class="row-flex between" style="padding: var(--space-4); {% if not forloop.last %}border-bottom:1px solid var(--color-border);{% endif %}">
+                <div class="row-flex gap-3">
+                    {% if not notification.is_read %}
+                        <span class="status-pill__dot" style="background:var(--color-primary); width:8px; height:8px;"></span>
+                    {% else %}
+                        {% icon 'inbox' size=16 css_class='text-muted' %}
+                    {% endif %}
+                    <div>
+                        <div style="{% if not notification.is_read %}font-weight:600;{% endif %}">{{ notification.verb }}</div>
+                        <span class="text-caption">{{ notification.created_at }}</span>
+                    </div>
+                </div>
+                {% if not notification.is_read %}
+                    <form method="post" action="{% url 'notifications:mark_read' notification.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline btn-sm">Mark read</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li class="empty-state">{% icon 'bell' size=28 %}<p>No notifications yet.</p></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

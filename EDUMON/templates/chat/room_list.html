@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load design %}
+{% block title %}Chat{% endblock %}
+{% block page_title %}Chat{% endblock %}
+{% block content %}
+<div class="grid grid-2" style="align-items:start;">
+    <div>
+        <h2 class="mb-3">Your rooms</h2>
+        <div class="table-wrap">
+            <ul>
+                {% for room in rooms %}
+                    <li style="{% if not forloop.last %}border-bottom:1px solid var(--color-border);{% endif %}">
+                        <a href="{% url 'chat:room_detail' room.name %}" class="row-flex gap-3" style="padding: var(--space-4); color:var(--color-text);">
+                            {% icon 'message-circle' size=18 %}<span>{{ room.name }}</span>
+                        </a>
+                    </li>
+                {% empty %}
+                    <li class="empty-state">{% icon 'message-circle' size=28 %}<p>No chats yet.</p></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="card">
+        <h2 class="mb-3">Start a new chat</h2>
+        <form method="post" action="{% url 'chat:start_chat' %}" class="row-flex gap-2">
+            {% csrf_token %}
+            <select name="user_id" class="form-control">
+                {% for other in other_users %}
+                    <option value="{{ other.pk }}">{{ other.real_name|default:other.username }} ({{ other.get_role_display }})</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary">Chat</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

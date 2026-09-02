@@ -1,4 +1,4 @@
-# Implementation Guide — eLearning Application
+# Implementation Guide — EDUMON Application
 
 Companion to `PRD.md`. Build in dependency order. **Each phase must end in a runnable, testable state — commit at every phase boundary.** Requirement tags (R1a, R2c, etc.) refer to `PRD.md`.
 
@@ -27,7 +27,7 @@ Companion to `PRD.md`. Build in dependency order. **Each phase must end in a run
 Split responsibilities across focused apps so views, models, serializers and API code each sit in the right file (satisfies C1).
 
 ```
-elearning/
+EDUMON/
 ├── manage.py
 ├── requirements.txt
 ├── config/                  # project settings package

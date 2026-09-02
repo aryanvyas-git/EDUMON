@@ -1,0 +1,8 @@
+{% load design %}
+<div class="card kpi-card">
+    <div>
+        <div class="text-stat">{{ value }}</div>
+        <div class="text-body-sm text-secondary">{{ label }}</div>
+    </div>
+    <div class="kpi-card__icon kpi-card__icon--{{ variant }}">{% icon icon_name size=26 %}</div>
+</div>

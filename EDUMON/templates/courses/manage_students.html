@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load design %}
+{% block title %}Manage students — {{ course.title }}{% endblock %}
+{% block page_title %}Manage students — {{ course.title }}{% endblock %}
+{% block content %}
+<div class="table-wrap">
+    <table class="table">
+        <thead>
+            <tr><th>Student</th><th>Enrolled at</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody>
+            {% for enrolment in enrolments %}
+                <tr>
+                    <td class="row-flex gap-2">
+                        <span class="avatar avatar--sm">{{ enrolment.student.real_name|default:enrolment.student.username|initials }}</span>
+                        {{ enrolment.student.real_name|default:enrolment.student }}
+                    </td>
+                    <td>{{ enrolment.enrolled_at|date:"d M Y" }}</td>
+                    <td>{% if enrolment.is_blocked %}{% status_pill 'danger' 'Blocked' %}{% else %}{% status_pill 'success' 'Active' %}{% endif %}</td>
+                    <td>
+                        <form method="post" action="{% url 'courses:toggle_block_student' course.pk enrolment.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger-outline btn-sm">
+                                {% if enrolment.is_blocked %}Unblock{% else %}Block{% endif %}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="4"><div class="empty-state">{% icon 'users' size=28 %}<p>No students enrolled yet.</p></div></td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

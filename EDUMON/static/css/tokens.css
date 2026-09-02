@@ -1,0 +1,79 @@
+/* Design tokens — EDUMON Application Visual System (see DESIGN.md). */
+:root {
+  /* ---- Brand / Primary (indigo-blue) ---- */
+  --color-primary:        #2F5BEA;
+  --color-primary-hover:  #2447C4;
+  --color-primary-soft:   #E8EDFD;
+  --color-primary-ring:   #C4D2FA;
+
+  /* ---- Accents ---- */
+  --color-accent-green:   #34C759;
+  --color-green-soft:     #E4F8EA;
+  --color-accent-yellow:  #FBD34D;
+  --color-yellow-soft:    #FEF3CF;
+  --color-accent-pink:    #EC4899;
+  --color-accent-purple:  #8B5CF6;
+  --color-sky:            #4FC3F7;
+  --color-sky-soft:       #E3F5FD;
+
+  /* ---- Sidebar (dark) ---- */
+  --color-sidebar-bg:     #14161A;
+  --color-sidebar-fg:     #E7E9EE;
+  --color-sidebar-muted:  #9AA0AB;
+  --color-sidebar-active-bg: var(--color-primary);
+  --color-sidebar-active-fg: #FFFFFF;
+
+  /* ---- Surfaces ---- */
+  --color-canvas:         #F6F7FB;
+  --color-surface:        #FFFFFF;
+  --color-surface-alt:    #FBFCFE;
+
+  /* ---- Text ---- */
+  --color-text:           #1A1D23;
+  --color-text-secondary: #5B6270;
+  --color-text-muted:     #9096A2;
+  --color-text-invert:    #FFFFFF;
+
+  /* ---- Status ---- */
+  --color-success:        #16A34A;
+  --color-success-soft:   #DCFCE7;
+  --color-warning:        #D97706;
+  --color-warning-soft:   #FEF3C7;
+  --color-neutral:        #6B7280;
+  --color-neutral-soft:   #EEF0F3;
+  --color-danger:         #DC2626;
+  --color-danger-soft:    #FEE2E2;
+
+  /* ---- Lines ---- */
+  --color-border:         #E9EBF0;
+  --color-border-strong:  #D6DAE2;
+
+  /* ---- Fonts ---- */
+  --font-sans: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Inter", sans-serif;
+  --font-script: "Caveat", cursive;
+
+  /* ---- Spacing (4px base) ---- */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
+  --space-12: 48px;
+
+  /* ---- Radius ---- */
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  20px;
+  --radius-2xl: 28px;
+  --radius-pill: 999px;
+
+  /* ---- Shadows ---- */
+  --shadow-xs: 0 1px 2px rgba(20,22,26,0.04);
+  --shadow-sm: 0 2px 8px rgba(20,22,26,0.05);
+  --shadow-md: 0 6px 20px rgba(20,22,26,0.07);
+  --shadow-lg: 0 12px 32px rgba(20,22,26,0.10);
+
+  /* ---- Layout ---- */
+  --sidebar-width: 248px;
+  --content-max: 1200px;
+  --header-height: 68px;
+}

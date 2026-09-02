@@ -1,0 +1,22 @@
+{% load design %}
+<div class="card course-card h-100">
+    <div class="course-card__header">
+        <div>
+            <h3>{{ course.title }}</h3>
+            <div class="course-card__meta mt-2">{% icon 'user' size=14 %}<span>Taught by {{ course.teacher.real_name|default:course.teacher.username }}</span></div>
+        </div>
+        {% if is_enrolled %}{% status_pill 'primary' 'Enrolled' %}{% endif %}
+    </div>
+
+    <p class="course-card__topics text-body-sm mb-0">{{ course.description|default:'No description yet.'|truncatewords:20 }}</p>
+
+    <div class="course-card__footer">
+        <div class="course-card__meta">
+            {% icon 'file-text' size=14 %}<span>{{ course.materials_count }} material{{ course.materials_count|pluralize }}</span>
+            {% if course.feedback_count %}
+                <span>&middot;</span>{% icon 'star' size=14 %}<span>{{ course.avg_rating|floatformat:1 }}/5 ({{ course.feedback_count }})</span>
+            {% endif %}
+        </div>
+        <a href="{% url 'courses:course_detail' course.pk %}" class="btn btn-outline btn-sm">View{% icon 'chevron-right' size=14 %}</a>
+    </div>
+</div>

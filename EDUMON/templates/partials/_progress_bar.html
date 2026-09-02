@@ -1,0 +1,6 @@
+<div class="progress-bar-wrap">
+    <div class="progress-track">
+        <div class="progress-fill progress-fill--{{ color }}" style="width: {{ pct }}%"></div>
+    </div>
+    {% if show_fraction %}<span class="progress-fraction">{{ value }} / {{ max_value }}</span>{% endif %}
+</div>

@@ -1,4 +1,4 @@
-# Product Requirements Document — eLearning Application
+# Product Requirements Document — EDUMON Application
 
 **Module:** CM3035 Advanced Web Development · Final Coursework (50% of module)
 **Stack:** Django + Django REST Framework + Django Channels (WebSockets)
@@ -8,7 +8,7 @@
 
 ## 1. Overview
 
-**Product.** A Django-based eLearning web platform where teachers create and manage courses and students discover, enrol on, and engage with them. The application combines a conventional request/response Django app, a Django REST Framework (DRF) API for user data, and at least one real-time module powered by Django Channels and WebSockets.
+**Product.** A Django-based EDUMON web platform where teachers create and manage courses and students discover, enrol on, and engage with them. The application combines a conventional request/response Django app, a Django REST Framework (DRF) API for user data, and at least one real-time module powered by Django Channels and WebSockets.
 
 **Goal.** Satisfy every functional requirement (R1a–R1l), technique requirement (R2–R5), and code-style guideline (C1–C6) in the brief, while maximising rubric points — including the bonus items (advanced techniques, video presentation, cloud deployment).
 

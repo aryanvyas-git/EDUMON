@@ -1,0 +1,38 @@
+{% extends 'base_public.html' %}
+{% load design %}
+{% block title %}EDUMON — Learn. Grow. Succeed.{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="hero__eyebrow text-script">Welcome to</div>
+    <h1 class="hero__title">Learn. Grow. <span class="accent">Succeed.</span></h1>
+    <p class="hero__subtitle">One place for teachers to run courses and for students to enrol, chat and track feedback — with live notifications the moment something changes.</p>
+    <a href="{% url 'accounts:register' %}" class="btn btn-cta">Get Started{% icon 'chevron-right' size=16 %}</a>
+
+    <div class="trust-strip">
+        <div class="avatar-stack">
+            <span class="avatar avatar--sm">S</span>
+            <span class="avatar avatar--sm">T</span>
+            <span class="avatar avatar--sm">A</span>
+        </div>
+        <span class="trust-strip__label">Built for students and teachers alike</span>
+    </div>
+</section>
+
+<section class="feature-grid">
+    <div class="feature-block feature-block--sky">
+        <div class="feature-block__icon">{% icon 'book-open' size=24 %}</div>
+        <h3>Courses that stay organised</h3>
+        <p class="text-body-sm">Teachers create courses, upload materials and manage who's enrolled.</p>
+    </div>
+    <div class="feature-block feature-block--green">
+        <div class="feature-block__icon">{% icon 'message-circle' size=24 %}</div>
+        <h3>Real-time chat</h3>
+        <p class="text-body-sm">Message teachers or classmates instantly, with full history kept for you.</p>
+    </div>
+    <div class="feature-block feature-block--yellow">
+        <div class="feature-block__icon">{% icon 'bell' size=24 %}</div>
+        <h3>Live notifications</h3>
+        <p class="text-body-sm">Get notified the moment you're enrolled, blocked, or a new material lands.</p>
+    </div>
+</section>
+{% endblock %}

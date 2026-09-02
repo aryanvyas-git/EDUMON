@@ -1,4 +1,4 @@
-# eLearning Application — Coursework Report
+# EDUMON Application — Coursework Report
 
 **Module:** CM3035 Advanced Web Development
 **Deliverable:** Final Coursework (50% of module)
@@ -8,7 +8,7 @@
 ## 1. Introduction & Requirements Overview
 
 This report documents the design, implementation and testing of a Django-based
-eLearning platform built for the CM3035 Advanced Web Development final
+EDUMON platform built for the CM3035 Advanced Web Development final
 coursework. The brief required a working web application that lets teachers
 create and manage courses while students discover, enrol on and engage with
 them, built using a conventional Django request/response application, a
@@ -357,7 +357,7 @@ one of the easiest ways to lose them. The suite is organised as:
   browsers chatting live" demo and does not require a running Redis
   instance (it uses the in-memory channel layer during tests).
 
-**How to run the tests.** From the `elearning/` directory, with the
+**How to run the tests.** From the `EDUMON/` directory, with the
 virtualenv active:
 
 ```bash
@@ -448,12 +448,12 @@ live-push bonus only fires for connected clients.
 **Key package versions:** Django 5.0.14, djangorestframework 3.17.2,
 channels 4.3.2, channels_redis 4.3.0, daphne 4.2.3, drf-spectacular 0.30.0,
 django-filter 25.1, Pillow 12.3.0, redis-py 8.1.0 (full pinned list in
-`elearning/requirements.txt`).
+`EDUMON/requirements.txt`).
 
 ### 1. Install
 
 ```bash
-cd elearning
+cd EDUMON
 python3.12 -m venv venv
 source venv/bin/activate          # Windows: venv\Scripts\activate
 pip install -r requirements.txt

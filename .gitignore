@@ -1,9 +1,9 @@
 venv/
 __pycache__/
 *.pyc
-elearning/db.sqlite3
-elearning/media/
-elearning/staticfiles/
+EDUMON/db.sqlite3
+EDUMON/media/
+EDUMON/staticfiles/
 .DS_Store
 *.egg-info/
 .env

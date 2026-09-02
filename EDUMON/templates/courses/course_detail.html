@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load design %}
+{% block title %}{{ course.title }}{% endblock %}
+{% block page_title %}{{ course.title }}{% endblock %}
+{% block content %}
+
+<div class="card mb-6">
+    <div class="row-flex between">
+        <div>
+            <h1 style="font-size:24px;">{{ course.title }}</h1>
+            <div class="course-card__meta mt-2">{% icon 'user' size=14 %}<span>Taught by {{ course.teacher.real_name|default:course.teacher }}</span></div>
+        </div>
+        {% if is_teacher_of_course %}
+            <a href="{% url 'courses:manage_students' course.pk %}" class="btn btn-outline">{% icon 'users' size=16 %}Manage students</a>
+        {% elif not enrolment and user.is_student %}
+            <form method="post" action="{% url 'courses:enrol' course.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Enrol</button>
+            </form>
+        {% elif enrolment %}
+            {% if enrolment.is_blocked %}{% status_pill 'danger' 'Blocked' %}{% else %}{% status_pill 'success' 'Enrolled' %}{% endif %}
+        {% endif %}
+    </div>
+    {% if course.description %}<p class="text-secondary mt-4 mb-0">{{ course.description }}</p>{% endif %}
+    {% if enrolment.is_blocked %}
+        <div class="alert alert-warning mt-4 mb-0">You have been blocked from this course by the teacher.</div>
+    {% endif %}
+</div>
+
+<div class="grid grid-2" style="align-items:start;">
+    <div class="stack gap-4">
+        <h2>Materials</h2>
+        <div class="table-wrap">
+            <ul>
+                {% for material in materials %}
+                    <li class="row-flex gap-3" style="padding: var(--space-4); {% if not forloop.last %}border-bottom:1px solid var(--color-border);{% endif %}">
+                        {% icon 'file-text' size=18 %}
+                        <a href="{{ material.file.url }}" style="color:var(--color-primary); font-weight:600;">{{ material.title }}</a>
+                    </li>
+                {% empty %}
+                    <li class="empty-state">{% icon 'file-text' size=28 %}<p>No materials available.</p></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% if material_form %}
+            <div class="card">
+                <h3 class="mb-3">Upload material</h3>
+                <form method="post" action="{% url 'courses:upload_material' course.pk %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in material_form %}
+                        <div class="field">
+                            <label class="field__label">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-sm">{% icon 'upload' size=16 %}Upload</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="stack gap-4">
+        <h2>Feedback</h2>
+        {% if feedback_form %}
+            <div class="card">
+                <form method="post" action="{% url 'courses:add_feedback' course.pk %}">
+                    {% csrf_token %}
+                    {% for field in feedback_form %}
+                        <div class="field">
+                            <label class="field__label">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-sm">Submit feedback</button>
+                </form>
+            </div>
+        {% endif %}
+
+        <div class="stack gap-3">
+            {% for feedback in feedback_list %}
+                <div class="card card-flat">
+                    <div class="row-flex between">
+                        <strong class="text-body-sm">{{ feedback.student.real_name|default:feedback.student }}</strong>
+                        <span class="row-flex gap-1 text-caption">{% icon 'star' size=13 %}{{ feedback.rating }}/5</span>
+                    </div>
+                    {% if feedback.comment %}<p class="text-body-sm mt-2 mb-0">{{ feedback.comment }}</p>{% endif %}
+                </div>
+            {% empty %}
+                <p class="text-muted text-body-sm">No feedback yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load design %}
+{% block title %}Chat — {{ room.name }}{% endblock %}
+{% block page_title %}Chat{% endblock %}
+{% block content %}
+<div class="card" style="max-width:720px; margin:0 auto;">
+    <div id="chat-log" class="chat-window">
+        {% for message in chat_messages %}
+            <div class="chat-bubble-row {% if message.sender_id == user.id %}is-own{% endif %}">
+                <div class="chat-bubble">
+                    <span class="chat-bubble__meta">{{ message.sender.real_name|default:message.sender.username }}</span>
+                    {{ message.body }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <form class="chat-composer" id="chat-form" onsubmit="return false;">
+        <input id="chat-input" type="text" class="form-control" placeholder="Type a message and press Enter">
+        <button id="chat-send" type="submit" class="btn btn-primary" aria-label="Send message">{% icon 'send' size=16 %}</button>
+    </form>
+</div>
+
+{{ room.name|json_script:"room-name" }}
+{{ user.id|json_script:"current-user-id" }}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+    const currentUserId = JSON.parse(document.getElementById('current-user-id').textContent);
+    const wsScheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const chatSocket = new WebSocket(`${wsScheme}://${window.location.host}/ws/chat/${roomName}/`);
+    const log = document.getElementById('chat-log');
+    const input = document.getElementById('chat-input');
+
+    function appendMessage(username, message, isOwn) {
+        const row = document.createElement('div');
+        row.className = 'chat-bubble-row' + (isOwn ? ' is-own' : '');
+        const bubble = document.createElement('div');
+        bubble.className = 'chat-bubble';
+        const meta = document.createElement('span');
+        meta.className = 'chat-bubble__meta';
+        meta.textContent = username;
+        bubble.appendChild(meta);
+        bubble.appendChild(document.createTextNode(message));
+        row.appendChild(bubble);
+        log.appendChild(row);
+        log.scrollTop = log.scrollHeight;
+    }
+
+    chatSocket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        appendMessage(data.username, data.message, data.user_id === currentUserId);
+    };
+
+    chatSocket.onclose = () => {
+        const note = document.createElement('div');
+        note.className = 'chat-system-note';
+        note.textContent = 'Connection closed.';
+        log.appendChild(note);
+    };
+
+    function sendMessage() {
+        const message = input.value.trim();
+        if (!message) return;
+        chatSocket.send(JSON.stringify({ message }));
+        input.value = '';
+    }
+
+    document.getElementById('chat-send').addEventListener('click', sendMessage);
+    input.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+</script>
+{% endblock %}

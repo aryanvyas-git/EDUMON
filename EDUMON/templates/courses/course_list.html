@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load design %}
+{% block title %}Courses{% endblock %}
+{% block page_title %}Courses{% endblock %}
+{% block content %}
+<div class="row-flex between mb-6">
+    <h2>All courses</h2>
+    {% if user.is_teacher %}
+        <a href="{% url 'courses:course_create' %}" class="btn btn-primary">{% icon 'plus-circle' size=16 %}New Course</a>
+    {% endif %}
+</div>
+
+<div class="grid grid-3">
+    {% for course in courses %}
+        {% include 'partials/_course_card.html' with course=course is_enrolled=course.is_enrolled %}
+    {% empty %}
+        <div class="empty-state" style="grid-column: 1 / -1;">
+            {% icon 'book-open' size=32 %}
+            <p>No courses yet.</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

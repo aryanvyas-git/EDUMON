@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load design %}
+{% block title %}Search Users{% endblock %}
+{% block page_title %}Search Users{% endblock %}
+{% block content %}
+<form method="get" class="row-flex gap-2 mb-6" style="max-width:480px;">
+    <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Name, username or email">
+    <button type="submit" class="btn btn-primary">{% icon 'search' size=16 %}Search</button>
+</form>
+
+<div class="table-wrap">
+    <ul>
+        {% for result in results %}
+            <li class="row-flex between" style="padding: var(--space-4); {% if not forloop.last %}border-bottom:1px solid var(--color-border);{% endif %}">
+                <a href="{% url 'accounts:user_detail' result.username %}" class="row-flex gap-3">
+                    <span class="avatar avatar--sm">{{ result.real_name|default:result.username|initials }}</span>
+                    <span>{{ result.real_name|default:result.username }}</span>
+                </a>
+                {% status_pill 'primary' result.get_role_display %}
+            </li>
+        {% empty %}
+            {% if query %}
+                <li class="empty-state">{% icon 'search' size=32 %}<p>No users found for "{{ query }}".</p></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
